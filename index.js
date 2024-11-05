@@ -6,6 +6,7 @@ const {
 	HttpError,
 	Keyboard,
 	InlineKeyboard,
+	webhookCallback,
 } = require('grammy')
 const fetch = require('node-fetch')
 const axios = require('axios')
@@ -20,14 +21,8 @@ exports.bot = bot
 // Укажите URL вебхука для вашего сервера
 const WEBHOOK_URL = process.env.WEBHOOK_URL
 
-// Настроим вебхук
-bot.api.setWebhook(WEBHOOK_URL).then(() => {
-	console.log(`Webhook установлен на ${WEBHOOK_URL}`)
-})
-
-// Middleware для бота
 app.use(express.json())
-app.use(bot.webhookCallback('/webhook'))
+app.use('/webhook', webhookCallback(bot, 'express'))
 
 let PERSONDATA = {
 	id: null,
@@ -1255,6 +1250,9 @@ bot.catch(err => {
 })
 
 const PORT = process.env.PORT
+bot.api.setWebhook(WEBHOOK_URL).then(() => {
+	console.log(`Webhook установлен на ${WEBHOOK_URL}`)
+})
 app.listen(PORT, () => {
 	console.log(`Сервер запущен на порту ${PORT}`)
 })
