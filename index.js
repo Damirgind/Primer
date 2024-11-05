@@ -72,7 +72,7 @@ const KEEP_ALIVE_INTERVAL = 4 * 60 * 1000 // 4 минуты
 function keepBotAlive() {
 	setInterval(async () => {
 		try {
-			await axios.get(`https://primer-rhna.onrender.com/webhook`)
+			await axios.get(`https://primer-klwa.onrender.com/webhook`)
 			console.log('Бот активен')
 		} catch (error) {
 			console.error('Ошибка при попытке сохранить бота активным:', error)
