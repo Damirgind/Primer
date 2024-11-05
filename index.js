@@ -286,7 +286,9 @@ async function fetchDataFromBase(ctx) {
 		}
 	} catch (error) {
 		console.error('Ошибка при загрузке данных из Airtable:', error)
-		await ctx.reply('Не удалось получить данные из Airtable.')
+		await ctx.reply(
+			'Не удалось загрузить данные... Пожалуйста, попробуйте позже))'
+		)
 	}
 }
 
@@ -309,23 +311,29 @@ async function STARTCommand(ctx) {
 	sendDataToBase(ctx)
 
 	const moodKeyboard = new Keyboard()
-		.text('1')
+		.text('Плоховатое 😩')
 		.row()
-		.text('2')
+		.text('Нормальное 🙄')
 		.row()
-		.text('3')
+		.text('Не жалуюсь 🤐')
 		.row()
-		.text('4')
+		.text('Хорошее 😊')
+		.row()
+		.text('Прекрасное 🔥')
 		.row()
 		.resized()
-	await ctx.reply(`Привет, ${PERSONDATA.firstName}`)
-	await ctx.reply(`Что может делать бот:
-		- Помогу подобрать нужный товар
-		- Помогу оформить заказ
-		- Буду оповещать о продвижении разработки товара
-		- Помогу быть в курсе всех новинок, акций, коллекций
-		- Буду дарить подарочки`)
-	await ctx.reply('Как настроение?', {
+	await ctx.reply(`Привет, ${PERSONDATA.firstName} 🥳🫶`)
+	await ctx.reply(`Я здесь, чтоб помочь тебе разобраться со всеми 
+вопросами мгновенно 😉👌:
+
+- Помогу тебе подобрать нужную одежду
+- Подскажу, как правильно выбрать размер
+- Расскажу о всех преимуществах нашей одежды
+- Буду держать в курсе всех процессов доставки заказа
+- А также постараюсь решать все возникающие вопросы
+
+Вперед и с песней 🤗🎉`)
+	await ctx.reply('Как твое настроение 😯?', {
 		reply_markup: moodKeyboard,
 	})
 }
@@ -345,28 +353,59 @@ function moodHears(bot) {
 			reply_markup: { remove_keyboard: true },
 		})
 		await ctx.reply(
-			`Как все будет происходить:
-		- Предложу выбрать товар (платье, свитшот мужской или женский)
-		- Помогу выбрать нужный размер
-		- Предложу выбрать нужный цвет
-		- Помогу оформить заказ
-		- Предложу удобные варианты оплаты
-		- Пришлю чек об успешной оплате
-		- Буду уведомлять о фазах создания заказа`,
+			`Ну, что, ты готов 🙂‍↕️? 
+Мне, просто, уже не терпится показать тебе нашу одежду 🥹))`,
 			{
 				reply_markup: goFromStartKeyboard,
 			}
 		)
 	}
 
-	bot.hears('1', async ctx => await REPLY(ctx, '😭', 'как так-то?'))
-	bot.hears('2', async ctx => await REPLY(ctx, '👾', 'я за тебя переживаю...'))
-	bot.hears('3', async ctx => await REPLY(ctx, '🌚', 'нормально - это хорошо'))
-	bot.hears('4', async ctx => await REPLY(ctx, '😍', 'да вообще круть!'))
+	bot.hears(
+		'Плоховатое 😩',
+		async ctx =>
+			await REPLY(
+				ctx,
+				'❤️‍🩹',
+				'Я переживаю, буду за тебя молиться 🙏. Не расстраивайся, Бог все усмотрит...'
+			)
+	)
+	bot.hears(
+		'Нормальное 🙄',
+		async ctx =>
+			await REPLY(
+				ctx,
+				'👍',
+				'Оу, надеюсь, что наша одежда сможет тебе поднять настроение 😉🫶'
+			)
+	)
+	bot.hears(
+		'Не жалуюсь 🤐',
+		async ctx =>
+			await REPLY(
+				ctx,
+				'🤗',
+				'Это невероятно, очень уважаю сильных людей. Дай Бог тебе мужества 🫡!'
+			)
+	)
+	bot.hears(
+		'Хорошее 😊',
+		async ctx =>
+			await REPLY(ctx, '🫶', 'Класс 👍! Пусть твой день станет еще лучше 🤩!')
+	)
+	bot.hears(
+		'Прекрасное 🔥',
+		async ctx =>
+			await REPLY(
+				ctx,
+				'🥳',
+				'Это очень круто, желаю тебе много интересных и веселых моментов в сегодняшнем дне 😁🎉!'
+			)
+	)
 
 	bot.callbackQuery('toNewBuy', async ctx => {
-		await ctx.answerCallbackQuery('Погнали покупать!')
-		await ctx.reply('👍')
+		await ctx.answerCallbackQuery('Погнали!')
+		await ctx.reply('🔥')
 		await NEWBUYCommand(ctx)
 	})
 
@@ -381,45 +420,27 @@ function moodHears(bot) {
 // ---------------------------------------------------------------------
 async function QUESTIONSComand(ctx) {
 	const questionsKeyboard = new InlineKeyboard()
-		.text('Почему мы можем вам доверять?', 'question1')
-		.row()
-		.text('Сколько будет длиться разработка?', 'question2')
-		.row()
-		.text('Сколько все будет стоить?', 'question3')
-		.row()
-		.text('Что насчет качества?', 'question4')
-		.row()
 		.text(
-			'Какой смысл покупать одежду у вас, есть можно найти дешевле в обычном магазине?',
-			'question5'
+			'Сколько времени будет длиться разработка и доставка одежды?',
+			'question1'
 		)
 		.row()
-		.text('Как оплатить заказ?', 'question6')
+		.text('Что насчет качества одежды?', 'question2')
 		.row()
-		.text('Когда придет заказ?', 'question7')
+		.text('Как оплачивать заказы?', 'question3')
 		.row()
-		.text('Подойдет ли мне эта одежда?', 'question8')
+		.text('Что, если я закажу не тот размер?', 'question4')
 		.row()
-		.text('Что делать, если мне не понравится одежда?', 'question9')
+		.text('Какой смысл в христианской одежде?', 'question5')
 		.row()
-		.text('Какой смысл в христианской одежде?', 'question10')
+		.text('В чем смысл бренда Альфа&Омега?', 'question6')
 		.row()
-		.text('Почему так дорого?', 'question11')
-		.row()
-		.text('Можно ли скидку?', 'question12')
-		.row()
-		.text('В чем смысл бренда "Альфа и Омега"?', 'question13')
-		.row()
-		.text('У меня другой вопрос (задать лично)', 'question14')
+		.text('У другой вопрос (задать лично)', 'question7')
 		.row()
 
-	await ctx.reply(
-		`В чем вопрос?
-Можете посмотреть ответы на распространенные вопросы:`,
-		{
-			reply_markup: questionsKeyboard,
-		}
-	)
+	await ctx.reply(`Вот список готовых ответов (для скорости) 😎:`, {
+		reply_markup: questionsKeyboard,
+	})
 }
 
 function questionsHears(bot) {
@@ -435,20 +456,65 @@ function questionsHears(bot) {
 		})
 	}
 
-	bot.callbackQuery('question1', async ctx => await ANSWER(ctx, 'Ответ1'))
-	bot.callbackQuery('question2', async ctx => await ANSWER(ctx, 'Ответ2'))
-	bot.callbackQuery('question3', async ctx => await ANSWER(ctx, 'Ответ3'))
-	bot.callbackQuery('question4', async ctx => await ANSWER(ctx, 'Ответ4'))
-	bot.callbackQuery('question5', async ctx => await ANSWER(ctx, 'Ответ5'))
-	bot.callbackQuery('question6', async ctx => await ANSWER(ctx, 'Ответ6'))
-	bot.callbackQuery('question7', async ctx => await ANSWER(ctx, 'Ответ7'))
-	bot.callbackQuery('question8', async ctx => await ANSWER(ctx, 'Ответ8'))
-	bot.callbackQuery('question9', async ctx => await ANSWER(ctx, 'Ответ9'))
-	bot.callbackQuery('question10', async ctx => await ANSWER(ctx, 'Ответ10'))
-	bot.callbackQuery('question11', async ctx => await ANSWER(ctx, 'Ответ11'))
-	bot.callbackQuery('question12', async ctx => await ANSWER(ctx, 'Ответ12'))
-	bot.callbackQuery('question13', async ctx => await ANSWER(ctx, 'Ответ13'))
-	bot.callbackQuery('question14', async ctx => await ANSWER(ctx, 'Ответ14'))
+	bot.callbackQuery(
+		'question1',
+		async ctx =>
+			await ANSWER(
+				ctx,
+				'В среднем за 2 - 3 недели. Мы будем очень стараться привезти ее вам побыстрее))'
+			)
+	)
+	bot.callbackQuery(
+		'question2',
+		async ctx =>
+			await ANSWER(
+				ctx,
+				'Наша одежда состоит из очень качественной и натуральной ткани (от 80% до 100% хлопка). Она очень приятная на ощупь и долго держит презентабельный вид 😍! Мы стараемся для тебя ❤️!'
+			)
+	)
+	bot.callbackQuery(
+		'question3',
+		async ctx =>
+			await ANSWER(
+				ctx,
+				'К этому боту подключен сервис Юкасса, который славится удобством и скоростью, поэтому мы надеемся, что оплата пройдет без затруднений и усложнений 🤩))'
+			)
+	)
+	bot.callbackQuery(
+		'question4',
+		async ctx =>
+			await ANSWER(
+				ctx,
+				'Мы продаем одежду oversize, поэтому, даже если вы ошиблись +- на размер, это не будет критично 🫣'
+			)
+	)
+	bot.callbackQuery(
+		'question5',
+		async ctx =>
+			await ANSWER(
+				ctx,
+				'Наша одежда проповедует негласно, потому что она создана по христианским принципам, и несет на себе небесные послания 🕊!'
+			)
+	)
+	bot.callbackQuery(
+		'question6',
+		async ctx =>
+			await ANSWER(
+				ctx,
+				'Альфа и Омега это стильная и скромная христианская одежда, меняющая твое окружение ❤️‍🔥!'
+			)
+	)
+	bot.callbackQuery(
+		'question7',
+		async ctx =>
+			await ANSWER(
+				ctx,
+				'Конечно, можете писать по всем вопросам [СЮДА] (https://t.me/DamirGindullin) 🫡',
+				{
+					parse_mode: 'MarkdownV2',
+				}
+			)
+	)
 
 	bot.callbackQuery('next', async ctx => {
 		await ctx.answerCallbackQuery('Погнали!')
@@ -489,7 +555,7 @@ function createSizeKeyboard(category, color) {
 	const keyboard = new InlineKeyboard()
 	const sizes = DATARECORDS.Products[category].color[color].size
 	for (const size in sizes) {
-		keyboard.text(`${size} ${sizes[size]}шт.`, `size:${size}`)
+		keyboard.text(`${size} ${sizes[size]} шт.`, `size:${size}`)
 	}
 	keyboard.text('Назад', 'back:color')
 	return keyboard
@@ -510,10 +576,8 @@ function createQuantityKeyboard(currentQuantity = 1, maxQuantity = 1) {
 // Обработка команды /new_buy
 async function NEWBUYCommand(ctx) {
 	await ctx.reply(
-		'Краткое описание коллекции, философия, цель, смысл А это [ссылочка](https://www.youtube.com/watch?v=q-AFR0D7Vuw) на видео коллекции',
-		{
-			parse_mode: 'MarkdownV2',
-		}
+		`🌟 Где Бог, там СЧАСТЬЕ 🌟 
+Новая коллекция бренда Альфа&Омега создана для того, чтобы поддержать тебя и подарить надежду окружающим!`
 	)
 	await fetchDataFromBase(ctx)
 	if (JSON.stringify(DATARECORDS) === '{}') {
@@ -523,7 +587,7 @@ async function NEWBUYCommand(ctx) {
 		if (DATARECORDS.GeneralMedia.general.length) {
 			await ctx.replyWithMediaGroup(DATARECORDS.GeneralMedia.general)
 		}
-		await ctx.reply('Выберите категорию товара:', { reply_markup: keyboard })
+		await ctx.reply('👌 Выбери категорию одежды:', { reply_markup: keyboard })
 	}
 }
 
@@ -537,7 +601,7 @@ bot.callbackQuery(/^category:(.+)$/, async ctx => {
 	if (DATARECORDS.GeneralMedia.categories[category]?.length) {
 		await ctx.replyWithMediaGroup(DATARECORDS.GeneralMedia.categories[category])
 	}
-	await ctx.reply('Выберите цвет товара:', { reply_markup: keyboard })
+	await ctx.reply('🤩 Выбери цвет одежды:', { reply_markup: keyboard })
 })
 
 // Обработка выбора цвета
@@ -557,7 +621,9 @@ bot.callbackQuery(/^color:(.+)$/, async ctx => {
 	}
 
 	const keyboard = createSizeKeyboard(category, color)
-	await ctx.reply('Выберите размер товара:', { reply_markup: keyboard })
+	await ctx.reply('🤗 Выбери подходящий размер одежды:', {
+		reply_markup: keyboard,
+	})
 })
 
 // Обработка выбора размера
@@ -573,7 +639,9 @@ bot.callbackQuery(/^size:(.+)$/, async ctx => {
 	}
 
 	const keyboard = createQuantityKeyboard(userSelections[userId].quantity) // Передаем текущее количество
-	await ctx.reply('Выберите количество товара:', { reply_markup: keyboard })
+	await ctx.reply('😍 Отметь нужное количество одежды:', {
+		reply_markup: keyboard,
+	})
 })
 
 // Обработка динамического изменения количества товара (для кнопок "-" и "+")
@@ -678,7 +746,7 @@ bot.callbackQuery('quantity:current', async ctx => {
 		show_alert: true,
 	}) // Подытоживание заказа и предложение перейти к оплате или добавить еще товары
 
-	await ctx.reply(`Заказ добавлен в корзину`, {
+	await ctx.reply(`Заказ добавлен в корзину, уже почти все 😀))`, {
 		reply_markup: new InlineKeyboard()
 			.text('Очистить корзину', 'action:clear')
 			.text('Добавить еще товар', 'action:add')
@@ -716,7 +784,7 @@ bot.callbackQuery('action:clear', async ctx => {
 		if (DATARECORDS.GeneralMedia.general.length) {
 			await ctx.replyWithMediaGroup(DATARECORDS.GeneralMedia.general)
 		}
-		await ctx.reply('Корзина очищена. Выберите категорию товара:', {
+		await ctx.reply('Корзина очищена. Выбери категорию одежды:', {
 			reply_markup: keyboard,
 		})
 	}
@@ -729,7 +797,7 @@ bot.callbackQuery('action:add', async ctx => {
 	if (DATARECORDS.GeneralMedia.general.length) {
 		await ctx.replyWithMediaGroup(DATARECORDS.GeneralMedia.general)
 	}
-	await ctx.reply('Выберите категорию товара:', { reply_markup: keyboard })
+	await ctx.reply('👌 Выбери категорию одежды:', { reply_markup: keyboard })
 })
 
 // Обработка перехода к оплате
@@ -746,17 +814,15 @@ bot.callbackQuery('action:checkout', async ctx => {
 		)
 		await ctx.reply('Ваша корзина пуста.', { reply_markup: keyboard })
 	} else {
-		let message = 'Ваш заказ:\n'
+		let message = 'Твой заказ:\n'
 		let total = 0
 		// console.log(PERSONDATA.order)
 		PERSONDATA.order.forEach((item, index) => {
 			const itemTotal = item.price * item.quantity // Вычисление стоимости каждого товара
 			total += itemTotal
-			message += `${index + 1}. ${item.title}, Цвет: ${item.color}, Размер: ${
-				item.size
-			}, Количество: ${item.quantity}, Цена: ${
-				item.price
-			}, Всего: ${itemTotal}\n`
+			message += `${index + 1}. ${item.title} ${item.size} ${item.color}: ${
+				item.quantity
+			}шт. Цена: ${item.price}₽ , Всего: ${itemTotal}₽\n`
 		})
 		message += `\nОбщая стоимость: ${total}₽` // Общая стоимость всех товаров
 		PERSONDATA.dataOrder = message
@@ -773,7 +839,7 @@ bot.callbackQuery('back:category', async ctx => {
 	if (DATARECORDS.GeneralMedia.general.length) {
 		await ctx.replyWithMediaGroup(DATARECORDS.GeneralMedia.general)
 	}
-	await ctx.reply('Выберите категорию товара:', { reply_markup: keyboard })
+	await ctx.reply('👌 Выбери категорию одежды:', { reply_markup: keyboard })
 })
 
 // Обработка нажатия на кнопку "Назад" для возврата к выбору цвета
@@ -785,7 +851,7 @@ bot.callbackQuery('back:color', async ctx => {
 	if (DATARECORDS.GeneralMedia.categories[category]?.length) {
 		await ctx.replyWithMediaGroup(DATARECORDS.GeneralMedia.categories[category])
 	}
-	await ctx.reply('Выберите цвет товара:', { reply_markup: keyboard })
+	await ctx.reply('🤩 Выбери цвет одежды:', { reply_markup: keyboard })
 })
 
 // Обработка нажатия на кнопку "Назад" для возврата к выбору размера
@@ -798,7 +864,9 @@ bot.callbackQuery('back:size', async ctx => {
 	await ctx.replyWithMediaGroup(
 		DATARECORDS.Products[category].color[color].media
 	)
-	await ctx.reply('Выберите размер товара:', { reply_markup: keyboard })
+	await ctx.reply('🤗 Выбери подходящий размер одежды:', {
+		reply_markup: keyboard,
+	})
 })
 
 // ------------------------------------------------------------------
@@ -843,25 +911,34 @@ async function PAYCommand(ctx) {
 					{
 						id: 'shipping_1',
 						title: 'Бонус',
-						prices: [{ label: 'Спасибо за сервис', amount: 1 * 50 }],
+						prices: [{ label: 'Спасибо за сервис', amount: 100 * 50 }],
 					},
 					{
 						id: 'shipping_2',
 						title: 'Чаевые',
-						prices: [{ label: 'Спасибо за то, что вы есть', amount: 1 * 250 }],
+						prices: [
+							{ label: 'Спасибо за то, что вы есть', amount: 100 * 250 },
+						],
 					},
 					{
 						id: 'shipping_3',
 						title: 'На развитие',
-						prices: [{ label: 'Хочу, чтоб бренд процветал', amount: 1 * 1000 }],
+						prices: [
+							{ label: 'Хочу, чтоб бренд процветал', amount: 100 * 1000 },
+						],
 					},
 					{
 						id: 'shipping_4',
 						title: 'На ускорение',
-						prices: [{ label: 'За все слава Богу', amount: 1 * 5000 }],
+						prices: [{ label: 'За все слава Богу', amount: 100 * 5000 }],
 					},
 					{
 						id: 'shipping_5',
+						title: 'Личная благодарность',
+						prices: [{ label: 'Без комментариев...', amount: 100 * 15000 }],
+					},
+					{
+						id: 'shipping_6',
 						title: 'Без чаевых',
 						prices: [{ label: 'Нет', amount: 0 }],
 					},
@@ -1016,25 +1093,30 @@ bot.on('shipping_query', async ctx => {
 		{
 			id: 'shipping_1',
 			title: 'Бонус',
-			prices: [{ label: 'Спасибо за сервис', amount: 1 * 50 }],
+			prices: [{ label: 'Спасибо за сервис', amount: 100 * 50 }],
 		},
 		{
 			id: 'shipping_2',
 			title: 'Чаевые',
-			prices: [{ label: 'Спасибо за то, что вы есть', amount: 1 * 250 }],
+			prices: [{ label: 'Спасибо за то, что вы есть', amount: 100 * 250 }],
 		},
 		{
 			id: 'shipping_3',
 			title: 'На развитие',
-			prices: [{ label: 'Хочу, чтоб бренд процветал', amount: 1 * 1000 }],
+			prices: [{ label: 'Хочу, чтоб бренд процветал', amount: 100 * 1000 }],
 		},
 		{
 			id: 'shipping_4',
 			title: 'На ускорение',
-			prices: [{ label: 'За все слава Богу', amount: 1 * 5000 }],
+			prices: [{ label: 'За все слава Богу', amount: 100 * 5000 }],
 		},
 		{
 			id: 'shipping_5',
+			title: 'Личная благодарность',
+			prices: [{ label: 'Без комментариев...', amount: 100 * 15000 }],
+		},
+		{
+			id: 'shipping_6',
 			title: 'Без чаевых',
 			prices: [{ label: 'Нет', amount: 0 }],
 		},
@@ -1110,7 +1192,9 @@ bot.on('message', async ctx => {
 			PERSONDATA.payName = successfulPayment.order_info.name
 			await sendFinalDataToBase(ctx)
 			await ctx.reply(
-				`Спасибо за ваш платеж! Сумма: ${amount / 100} ${currency}.`,
+				`🎉 Спасибо за покупку! Все прошло успешно 🫡! Приходите еще 😁!  Сумма покупки: ${
+					amount / 100
+				} ${currency}.`,
 				{
 					reply_markup: newBuyKeyboard,
 				}
