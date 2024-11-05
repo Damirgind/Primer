@@ -1238,14 +1238,4 @@ bot.catch(err => {
 	}
 })
 
-// Удаляем webhook перед запуском getUpdates
-async function startGO() {
-	await bot.api.deleteWebhook()
-	console.log('Webhook удален, теперь можно использовать getUpdates')
-
-	// Запуск бота с опцией drop_pending_updates
-	bot.start({
-		drop_pending_updates: true,
-	})
-}
-startGO()
+bot.start()
