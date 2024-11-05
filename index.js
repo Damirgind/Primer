@@ -72,9 +72,7 @@ const KEEP_ALIVE_INTERVAL = 5 * 60 * 1000 // 5 минут
 function keepBotAlive() {
 	setInterval(async () => {
 		try {
-			await axios.get(
-				`https://api.telegram.org/bot${process.env.BOT_API_KEY}/getUpdates`
-			)
+			await axios.get(`https://primer-rhna.onrender.com/webhook`)
 			console.log('Бот активен')
 		} catch (error) {
 			console.error('Ошибка при попытке сохранить бота активным:', error)
