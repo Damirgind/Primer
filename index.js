@@ -1238,4 +1238,13 @@ bot.catch(err => {
 	}
 })
 
+async function startGO() {
+	await bot.api
+		.deleteWebhook()
+		.then(() =>
+			console.log('Webhook удален, теперь можно использовать getUpdates')
+		)
+		.catch(error => console.error('Ошибка при удалении webhook:', error))
+}
+startGO()
 bot.start()
