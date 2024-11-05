@@ -67,7 +67,7 @@ bot.command('new_buy', async ctx => await NEWBUYCommand(ctx))
 // ---------------------------------------------------------------------
 // ПРОГРАММА БОТА
 
-const KEEP_ALIVE_INTERVAL = 5 * 60 * 1000 // 5 минут
+const KEEP_ALIVE_INTERVAL = 5 * 60 * 10 // 5 минут
 
 function keepBotAlive() {
 	setInterval(async () => {
