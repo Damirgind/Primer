@@ -9,9 +9,25 @@ const {
 } = require('grammy')
 const fetch = require('node-fetch')
 const axios = require('axios')
+// Настроим Express или другую библиотеку для создания HTTP-сервера
+const express = require('express')
+const app = express()
+
 // Создание бота
 const bot = new Bot(process.env.BOT_API_KEY)
 exports.bot = bot
+
+// Укажите URL вебхука для вашего сервера
+const WEBHOOK_URL = process.env.WEBHOOK_URL
+
+// Настроим вебхук
+bot.api.setWebhook(WEBHOOK_URL).then(() => {
+	console.log(`Webhook установлен на ${WEBHOOK_URL}`)
+})
+
+// Middleware для бота
+app.use(express.json())
+app.use(bot.webhookCallback('/webhook'))
 
 let PERSONDATA = {
 	id: null,
@@ -1238,4 +1254,7 @@ bot.catch(err => {
 	}
 })
 
-bot.start()
+const PORT = process.env.PORT
+app.listen(PORT, () => {
+	console.log(`Сервер запущен на порту ${PORT}`)
+})
